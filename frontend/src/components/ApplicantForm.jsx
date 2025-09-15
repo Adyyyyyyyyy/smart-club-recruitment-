@@ -1,33 +1,105 @@
 import { useState } from "react";
-import API from "../api";
 
-export default function ApplicantForm() {
-  const [form, setForm] = useState({ name: "", email: "", club: "", whyJoin: "" });
-  const [message, setMessage] = useState("");
+function ApplicantForm() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    department: "",
+    reason: "",
+  });
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const res = await API.post("/apply", form);
-      setMessage(`✅ Application submitted! Your ID: ${res.data.applicationId}`);
-    } catch {
-      setMessage("❌ Failed to submit application");
-    }
+    console.log("Form Submitted:", formData);
+    // TODO: Connect with backend API
   };
 
   return (
-    <div>
-      <h2>Apply to a Club</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Name" onChange={handleChange} required />
-        <input name="email" placeholder="Email" onChange={handleChange} required />
-        <input name="club" placeholder="Club Name" onChange={handleChange} required />
-        <textarea name="whyJoin" placeholder="Why join?" onChange={handleChange} />
-        <button type="submit">Submit</button>
-      </form>
-      <p>{message}</p>
-    </div>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4"
+    >
+      {/* Name */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Full Name
+        </label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          placeholder="Enter your full name"
+          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+      </div>
+
+      {/* Email */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Email Address
+        </label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          placeholder="you@example.com"
+          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+      </div>
+
+      {/* Department */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Department
+        </label>
+        <select
+          name="department"
+          value={formData.department}
+          onChange={handleChange}
+          required
+          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        >
+          <option value="">Select your department</option>
+          <option value="CSE">Computer Science</option>
+          <option value="ECE">Electronics</option>
+          <option value="ME">Mechanical</option>
+          <option value="CE">Civil</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      {/* Reason */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Why do you want to join?
+        </label>
+        <textarea
+          name="reason"
+          value={formData.reason}
+          onChange={handleChange}
+          required
+          placeholder="Write your motivation here..."
+          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+      </div>
+
+      {/* Submit */}
+      <button
+        type="submit"
+        className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700 transition"
+      >
+        Submit Application
+      </button>
+    </form>
   );
 }
+
+export default ApplicantForm;
